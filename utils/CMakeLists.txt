@@ -37,7 +37,13 @@ target_link_libraries(flinkinterrupthandler PRIVATE ${PROJECT_NAME})
 add_executable(flinkinterruptmultiplexer flinkinterruptmultiplexer.c)
 target_link_libraries(flinkinterruptmultiplexer PRIVATE ${PROJECT_NAME})
 
-cmake_path(RELATIVE_PATH CMAKE_CURRENT_LIST_DIR BASE_DIRECTORY "${PROJECT_SOURCE_DIR}" OUTPUT_VARIABLE "relpath")
+# cmake_path is only availible ab cmake-3.20 bit this cmake should be comaptible with cmake-3.14
+if(COMMAND cmake_path)
+  cmake_path(RELATIVE_PATH CMAKE_CURRENT_LIST_DIR BASE_DIRECTORY "${PROJECT_SOURCE_DIR}" OUTPUT_VARIABLE "relpath")
+else()
+  file(RELATIVE_PATH relpath "${PROJECT_SOURCE_DIR}" "${CMAKE_CURRENT_LIST_DIR}")
+endif()
+
 install(TARGETS
   lsflink flinkinfo flinkanaloginput flinkanalogoutput flinkdio flinkpwm flinkcounter
   flinkwd flinkppwa flinkreflectivesensoren flinksteppermotor flinkinterrupthandler flinkinterruptmultiplexer
